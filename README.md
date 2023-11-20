@@ -1,8 +1,8 @@
 Environment Variables
 1. Create a .env.test file in the root of the project, and write the following:
-PGDATABASE= nc_news_test;
+PGDATABASE= nc_news_test
 2. Create a .env.development file in the root of the project, and write the following:
-PGDATABASE= nc_news;
+PGDATABASE= nc_news
 
 Database Connection
 
