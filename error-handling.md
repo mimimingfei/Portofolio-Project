@@ -13,15 +13,15 @@ The following is _not_ a comprehensive list! Its purpose is just to get the ball
 
 ## Relevant HTTP Status Codes
 
-- 200 OK
-- 201 Created
-- 204 No Content
-- 400 Bad Request
-- 404 Not Found
-- 405 Method Not Allowed
+- 200 OK - all requests
+- 201 Created - post request
+- 204 No Content - delete request
+- 400 Bad Request - all requests
+- 404 Not Found - get request
+- 405 Method Not Allowed - all requests
 - 418 I'm a teapot
-- 422 Unprocessable Entity
-- 500 Internal Server Error
+- 422 Unprocessable Entity - post request
+- 500 Internal Server Error - all requests
 
 ---
 

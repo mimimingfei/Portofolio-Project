@@ -5,4 +5,5 @@ PGDATABASE= nc_news_test;
 PGDATABASE= nc_news;
 
 Database Connection
+
 The application uses the environment variables to establish connections to PostgreSQL databases. Make sure your local databases are running before starting the application.
