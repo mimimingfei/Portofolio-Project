@@ -60,8 +60,9 @@ describe("GET/api/articles/:article_id", () => {
             .get("/api/articles/1")
             .expect(200)
             .then(({ body }) => {
+                const {article} = body
                 const expectedDate = new Date('2020-07-09 21:11:00')
-                expect(body).toMatchObject({
+                expect(article).toMatchObject({
                     article_id: 1,
                     title: "Living in the shadow of a great man",
                     topic: "mitch",
