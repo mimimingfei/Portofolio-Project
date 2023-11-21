@@ -93,25 +93,15 @@ describe("GET/api/articles/:article_id", () => {
     })
 })
 
-// describe("GET /api/articles", () => {
+// describe.only("GET /api/articles", () => {
 //     test("200: responds with an array of articles", () => {
 //         return request(app)
 //             .get("/api/articles")
 //             .expect(200)
 //             .then(({ body }) => {
-//                 expect(body).toHaveLength(3);
-//                 body.forEach((topic) => {
-//                     expect(topic).toMatchObject({
-//                         author:expect.any(String),
-//                         title:expect.any(String),
-//                         article_id:expect.any(Number),
-//                         topic:expect.any(String),
-//                         created_at:expect.any(Date),
-//                         votes:expect.any(Number),
-//                         article_img_url:expect.any(String),
-//                         comment_count:expect.any(Number),
-//                     });
+//                 const {articles} = body
+//                 console.log(articles)
+              
 //                 })
 //             })
 //     })
-// })

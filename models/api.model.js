@@ -21,23 +21,26 @@ exports.selectArticleById = (id)=>{
         return rows[0]
     })
 }
-exports.selectAllArticles=()=>{
-    const promise1 = db.query(`SELECT * FROM articles`)
-    const promise2 = promise1.forEach(element => {
-         selectCommentsByArticleId(element.article_id)
-    });
-    return Promise.all([promise1, promise2])
-    .then(([articles, comments]) => {
-        return { articles: articles.rows, comments };
-    });
+exports.selectAllArticles = () => {
+    return db.query(`SELECT * FROM articles`)
+        .then(allArticles => {
+            const commentsPromises = allArticles.rows.map(article => {
+                return selectCommentsByArticleId(article.article_id)
+                    .then(commentsForArticle => {
+                        return { ...article, comments: commentsForArticle };
+                    });
+            });
+            return Promise.all(commentsPromises);
+        });
 }
+
 
 exports.selectCommentsByArticleId = (articleId) => {
     const query = `SELECT comment_id, article_id FROM comments WHERE article_id = $1;`;
     return db.query(query, [articleId])
         .then(({ rows }) => {
             if (!rows.length) {
-                return Promise.reject({ status: 404, msg: 'No comments found' });
+                return Promise.reject({ status: 404, msg: `No comments found for article ${articleId}` });
             } 
             return rows.length;
         });
