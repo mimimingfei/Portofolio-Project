@@ -34,6 +34,7 @@ describe("GET /api/topics", () => {
             .get("/api/invalid_endpoint")
             .expect(404)
             .then(({ body }) => {
+                console.log(body.msg)
                 expect(body.msg).toBe("not found");
             });
     });
@@ -79,7 +80,7 @@ describe("GET/api/articles/:article_id", () => {
             .get("/api/articles/19999")
             .expect(404)
             .then(({ body }) => {
-                expect(body.msg).toBe("not found");
+                expect(body.msg).toBe('article of id 19999 is not found');
             });
     })
 
@@ -88,7 +89,7 @@ describe("GET/api/articles/:article_id", () => {
             .get("/api/articles/apple")
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("invalid id");
+                expect(body.msg).toBe("bad request");
             });
     })
 })
