@@ -3,6 +3,8 @@ const app = require("./app")
 const db = require("./db/connection")
 const seed = require("./db/seeds/seed")
 const { topicData, userData, articleData, commentData } = require("./db/data/test-data/index.js")
+const fs = require('fs');
+const path = require('path');
 
 beforeEach(() => {
     return seed({ topicData, userData, articleData, commentData })
@@ -36,3 +38,17 @@ describe("GET /api/topics", () => {
             });
     });
 })
+
+
+describe("GET /api", () => {
+    test("GET 200: returns json object listing all endpoints", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body }) => {
+            const filePath = `${__dirname}/endpoints.json`;
+            const endpointsJSON = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+          expect(body.endpoints).toMatchObject(endpointsJSON);
+        });
+    });
+  });
