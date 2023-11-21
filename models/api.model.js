@@ -9,39 +9,12 @@ exports.selectTopics = () => {
 }
 
 exports.selectArticleById = (id)=>{
-    const isNumberRegex = /^\d+$/;
-    if (!isNumberRegex.test(id)) {
-        return Promise.reject({ status: 400, msg: 'invalid id' });
-    }
     return db.query(`SELECT * FROM articles WHERE article_id = $1;`,[id])
     .then(({rows})=>{
-        if(!rows.length){
-            return Promise.reject({status:404, msg:'not found'})
+        if(rows.length===0){
+            return Promise.reject({status:404, msg:`article of id ${id} is not found`})
         }
         return rows[0]
     })
 }
-exports.selectAllArticles = () => {
-    return db.query(`SELECT * FROM articles`)
-        .then(allArticles => {
-            const commentsPromises = allArticles.rows.map(article => {
-                return selectCommentsByArticleId(article.article_id)
-                    .then(commentsForArticle => {
-                        return { ...article, comments: commentsForArticle };
-                    });
-            });
-            return Promise.all(commentsPromises);
-        });
-}
 
-
-exports.selectCommentsByArticleId = (articleId) => {
-    const query = `SELECT comment_id, article_id FROM comments WHERE article_id = $1;`;
-    return db.query(query, [articleId])
-        .then(({ rows }) => {
-            if (!rows.length) {
-                return Promise.reject({ status: 404, msg: `No comments found for article ${articleId}` });
-            } 
-            return rows.length;
-        });
-};

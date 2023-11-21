@@ -5,6 +5,7 @@ const seed = require("./db/seeds/seed")
 const { topicData, userData, articleData, commentData } = require("./db/data/test-data/index.js")
 const fs = require('fs');
 const path = require('path');
+require("jest-sorted");
 
 beforeEach(() => {
     return seed({ topicData, userData, articleData, commentData })
@@ -59,8 +60,9 @@ describe("GET/api/articles/:article_id", () => {
             .get("/api/articles/1")
             .expect(200)
             .then(({ body }) => {
+                const {article} = body
                 const expectedDate = new Date('2020-07-09 21:11:00')
-                expect(body).toMatchObject({
+                expect(article).toMatchObject({
                     article_id: 1,
                     title: "Living in the shadow of a great man",
                     topic: "mitch",
@@ -79,7 +81,7 @@ describe("GET/api/articles/:article_id", () => {
             .get("/api/articles/19999")
             .expect(404)
             .then(({ body }) => {
-                expect(body.msg).toBe("not found");
+                expect(body.msg).toBe('article of id 19999 is not found');
             });
     })
 
@@ -88,20 +90,8 @@ describe("GET/api/articles/:article_id", () => {
             .get("/api/articles/apple")
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("invalid id");
+                expect(body.msg).toBe("bad request");
             });
     })
 })
 
-// describe.only("GET /api/articles", () => {
-//     test("200: responds with an array of articles", () => {
-//         return request(app)
-//             .get("/api/articles")
-//             .expect(200)
-//             .then(({ body }) => {
-//                 const {articles} = body
-//                 console.log(articles)
-              
-//                 })
-//             })
-//     })
