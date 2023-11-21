@@ -35,7 +35,6 @@ describe("GET /api/topics", () => {
             .get("/api/invalid_endpoint")
             .expect(404)
             .then(({ body }) => {
-                console.log(body.msg)
                 expect(body.msg).toBe("not found");
             });
     });
@@ -110,7 +109,7 @@ describe("GET /api/articles", () => {
                         title:expect.any(String),
                         article_id: expect.any(Number),
                         topic:expect.any(String),
-                        created_at:expect.any(String),
+                        created_at: expect.any(String),
                         votes:expect.any(Number),
                         comment_count:expect.any(Number)
                     });

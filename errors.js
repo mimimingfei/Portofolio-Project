@@ -18,6 +18,5 @@ exports.handleServerErrors = (err, req, res, next) =>{
 } 
 
 exports.handle404 = (req, res) =>{
-    console.log('handle404 invoked')
     res.status(404).send({ msg:'not found'});
   }
