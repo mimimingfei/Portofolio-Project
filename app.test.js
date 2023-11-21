@@ -35,6 +35,7 @@ describe("GET /api/topics", () => {
             .get("/api/invalid_endpoint")
             .expect(404)
             .then(({ body }) => {
+                console.log(body.msg)
                 expect(body.msg).toBe("not found");
             });
     });
