@@ -21,3 +21,11 @@ exports.getArticleById = (req, res, next)=>{
     })
     .catch(next);
 }
+
+exports.getAllArticles =(req, res, next)=>{
+    selectAllArticles()
+    .then((articles) => {
+        res.status(200).send(articles);
+    })
+    .catch(next);
+}
