@@ -5,6 +5,7 @@ const seed = require("./db/seeds/seed")
 const { topicData, userData, articleData, commentData } = require("./db/data/test-data/index.js")
 const fs = require('fs');
 const path = require('path');
+require("jest-sorted");
 
 beforeEach(() => {
     return seed({ topicData, userData, articleData, commentData })
@@ -94,3 +95,4 @@ describe("GET/api/articles/:article_id", () => {
             });
     })
 })
+
