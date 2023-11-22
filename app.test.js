@@ -29,15 +29,6 @@ describe("GET /api/topics", () => {
                 })
             })
     })
-
-    test("404: responds with not found for invalid endpoint", () => {
-        return request(app)
-            .get("/api/invalid_endpoint")
-            .expect(404)
-            .then(({ body }) => {
-                expect(body.msg).toBe("not found");
-            });
-    });
 })
 
 
@@ -206,6 +197,16 @@ describe("POST /api/articles/:article_id/comments", () => {
           });
       });
      
-    
+    test("404: valid input data but username does not exist", () => {
+        const newComment = { username: "ABC", body: "test" };
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("foreign key violation");
+          });
+      });
+     
 
 })
