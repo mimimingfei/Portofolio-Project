@@ -173,7 +173,7 @@ describe('/api/articles/:article_id/comments', () => {
 
 describe("POST /api/articles/:article_id/comments", () => {
     test("201: responds with the posted comment", () => {
-        const newComment = { username: 'butter_bridge', comment: "test" };
+        const newComment = { username: 'butter_bridge', body: "test" };
         return request(app)
             .post("/api/articles/1/comments")
             .send(newComment)
@@ -196,7 +196,7 @@ describe("POST /api/articles/:article_id/comments", () => {
             });
     });
     test("404: valid input data but article does not exist", () => {
-        const newComment = { username: "butter_bridge", comment: "test" };
+        const newComment = { username: "butter_bridge", body: "test" };
         return request(app)
           .post("/api/articles/983247823/comments")
           .send(newComment)
