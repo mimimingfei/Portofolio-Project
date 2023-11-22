@@ -117,12 +117,31 @@ describe('/api/articles/:article_id/comments', () => {
             });
     })
 
-    test("404: article_id does not exist", () => {
+    test("404: article_id is valid but does not exist", () => {
         return request(app)
             .get("/api/articles/1000/comments")
             .expect(404)
             .then(({ body }) => {
-                expect(body.msg).toBe("no comments found for article 1000");
+                expect(body.msg).toBe("article of id 1000 is not found");
+            });
+    });
+
+    test('404: responds with an error for invalid article_id', () => {
+        return request(app)
+            .get('/api/articles/notanumber/comments')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('bad request');
+            });
+    });
+
+    test('200: responds with an empty array for a valid article_id with no comments', () => {
+        return request(app)
+            .get('/api/articles/4/comments')
+            .expect(200)
+            .then(({ body }) => {
+                const { comments } = body;
+                expect(comments).toEqual([]);
             });
     });
 })

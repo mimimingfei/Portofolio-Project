@@ -1,10 +1,14 @@
-const { selectCommentsForArticle } = require('../models/comment.model')
-
+const { selectCommentsForArticle } = require('../models/comment.model');
+const { selectArticleById } = require('../models/api.model')
 exports.getCommentsForArticle = (req, res, next) => {
     const { article_id } = req.params;
-    selectCommentsForArticle(article_id)
-        .then((comments) => {
+    const ifArticleExists = selectArticleById(article_id);
+    const commentsFromArticle = selectCommentsForArticle(article_id)
+    Promise.all([ifArticleExists, commentsFromArticle])
+        .then(([article, comments]) => {
             res.status(200).send({ comments });
         })
         .catch(next)
 }
+
+
