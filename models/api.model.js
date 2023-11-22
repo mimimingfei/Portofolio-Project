@@ -1,5 +1,4 @@
-const {Pool}= require('pg')
-const db = new Pool()
+const db = require("../db/connection");
 
 exports.selectTopics = () => {
     return db.query(`SELECT * FROM topics`)
