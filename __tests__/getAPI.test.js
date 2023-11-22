@@ -1,8 +1,8 @@
 const request = require("supertest")
-const app = require("./app")
-const db = require("./db/connection")
-const seed = require("./db/seeds/seed")
-const { topicData, userData, articleData, commentData } = require("./db/data/test-data/index.js")
+const app = require("../app")
+const db = require("../db/connection")
+const seed = require("../db/seeds/seed")
+const { topicData, userData, articleData, commentData } = require("../db/data/test-data/index.js")
 const fs = require('fs');
 const path = require('path');
 require("jest-sorted");
@@ -47,7 +47,7 @@ describe("GET /api", () => {
             .get("/api")
             .expect(200)
             .then(({ body }) => {
-                const filePath = `${__dirname}/endpoints.json`;
+                const filePath = `${__dirname}/../endpoints.json`;
                 const endpointsJSON = JSON.parse(fs.readFileSync(filePath, 'utf8'));
                 expect(body.endpoints).toMatchObject(endpointsJSON);
             });
@@ -109,7 +109,7 @@ describe("GET /api/articles", () => {
                         title:expect.any(String),
                         article_id: expect.any(Number),
                         topic:expect.any(String),
-                        created_at:expect.any(String),
+                        created_at: expect.any(String),
                         votes:expect.any(Number),
                         comment_count:expect.any(Number)
                     });

@@ -1,5 +1,5 @@
 const { selectCommentsForArticle } = require('../models/comment.model');
-const { selectArticleById } = require('../models/api.model')
+const { selectArticleById } = require('../models/article.model')
 exports.getCommentsForArticle = (req, res, next) => {
     const { article_id } = req.params;
     const ifArticleExists = selectArticleById(article_id);

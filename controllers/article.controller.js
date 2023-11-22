@@ -1,5 +1,5 @@
 const articles = require('../db/data/test-data/articles.js');
-const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId } = require('../models/api.model.js')
+const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId } = require('../models/article.model.js')
 
 
 exports.getAllTopics = (req, res, next) => {
