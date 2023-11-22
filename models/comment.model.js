@@ -7,3 +7,11 @@ exports.selectCommentsForArticle = (article_id) => {
   }
   )
 }
+exports.addCommentsForArticle = (article_id, newComment) => {
+  const {username, comment} = newComment
+  const queryStr =  `INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *; `;
+  return db.query(queryStr, [username, comment, article_id]).then(({ rows }) => {
+    return rows[0]
+  })
+}
+ 
