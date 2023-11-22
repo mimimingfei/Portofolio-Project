@@ -1,5 +1,5 @@
 const express = require("express");
-const {getAllTopics,getAllEndpoints,getArticleById,getAllArticles} = require("./controllers/api.controller")
+const {getAllTopics,getAllEndpoints,getArticleById,getAllArticles} = require("./controllers/article.controller")
 const {getCommentsForArticle} = require('./controllers/comment.controller')
 const {handlePsqErrors, handleCustomErrors, handleServerErrors, handle404} = require("./errors")
 
@@ -11,6 +11,9 @@ app.get('/api', getAllEndpoints);
 app.get('/api/articles/:article_id',getArticleById)
 app.get('/api/articles/:article_id/comments',getCommentsForArticle)
 app.get('/api/articles',getAllArticles)
+
+
+
 
 
 app.all("*", handle404)
