@@ -17,24 +17,20 @@ exports.selectArticleById = (id)=>{
     })
 }
 
-exports.selectAllArticles = (topic) => {
+exports.selectAllArticles = (topicSlug) => {
     let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes,
     CAST(COUNT(comments.article_id) AS INT) AS comment_count
     FROM articles
     LEFT JOIN comments ON comments.article_id = articles.article_id`;
-    const value = [];
-    if (topic) {
-      queryStr += ` WHERE articles.topic = $1`;
-      value.push(topic);
-  }
-    queryStr += ` GROUP BY articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes
-ORDER BY created_at DESC`;
-
-    console.log(queryStr)
-    return db.query(queryStr,value).then(({ rows }) => {
-        return rows;
-      });
+    const values = [];
+    if (topicSlug) {
+        queryStr += ` WHERE articles.topic = $1`;
+        values.push(topicSlug);
     }
+    queryStr += ` GROUP BY articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes
+    ORDER BY created_at DESC`;
+    return db.query(queryStr, values).then(({ rows }) => rows);
+};
 
 exports.selectCommentsByArticleId = (articleId) => {
 return db.query(`SELECT comment_id, article_id FROM comments WHERE article_id = $1;`,[articleId])
