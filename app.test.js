@@ -339,7 +339,6 @@ describe("PATCH /api/articles/:article_id", () => {
       });
 })
 
-     
 
 describe("GET /api/users", () => {
     test("200: responds with an array of user object", () => {
