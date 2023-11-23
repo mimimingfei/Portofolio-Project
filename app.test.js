@@ -177,22 +177,21 @@ describe("POST /api/articles/:article_id/comments", () => {
             })
     })
 
-    test('201:ignore any unnecessary properties on the request body',()=>{
-        const newComment = { username: 'butter_bridge', body: "test", votes:100, color:'red'};
+    test('201:ignore any unnecessary properties on the request body', () => {
+        const newComment = { username: 'butter_bridge', body: "test", votes: 100, color: 'red' };
         return request(app)
-        .post("/api/articles/1/comments")
-        .send(newComment)
-        .expect(201)
-        .then(({ body }) => {
-            const { Comment } = body;
-            expect(Comment.body).toBe('test')
-            expect(Comment.article_id).toBe(1)
-            expect(Comment.author).toBe('butter_bridge')
-        })
+            .post("/api/articles/1/comments")
+            .send(newComment)
+            .expect(201)
+            .then(({ body }) => {
+                const { Comment } = body;
+                expect(Comment.body).toBe('test')
+                expect(Comment.article_id).toBe(1)
+                expect(Comment.author).toBe('butter_bridge')
+            })
 
-    })
     test("400: Bad request, missing part of input comment data ", () => {
-        const newComment= { comment: "test" };
+        const newComment = { comment: "test" };
         return request(app)
             .post("/api/articles/1/comments")
             .send(newComment)
@@ -202,7 +201,7 @@ describe("POST /api/articles/:article_id/comments", () => {
             });
     });
     test("400: Bad request, invalid article_id ", () => {
-        const newComment= { username: "butter_bridge", body: "test" };
+        const newComment = { username: "butter_bridge", body: "test" };
         return request(app)
             .post("/api/articles/notanumber/comments")
             .send(newComment)
@@ -221,17 +220,43 @@ describe("POST /api/articles/:article_id/comments", () => {
                 expect(body.msg).toBe("article of id 983247823 is not found");
             });
     });
-     
+
     test("404: valid input data but username does not exist", () => {
         const newComment = { username: "ABC", body: "test" };
         return request(app)
-          .post("/api/articles/1/comments")
-          .send(newComment)
-          .expect(404)
-          .then(({ body }) => {
-            expect(body.msg).toBe("foreign key violation");
-          });
-      });
+            .post("/api/articles/1/comments")
+            .send(newComment)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("foreign key violation");
+            });
+    });
+})
+
+
+describe("DELETE /api/comments/:comment_id", () => {
+    test("204: deletion successful", () => {
+        return request(app)
+            .delete("/api/comments/1")
+            .expect(204)
+    })
+    test("400: bad request, invalid comment_id", () => {
+        return request(app)
+            .delete("/api/comments/apple")
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request");
+            });
+    });
+
+    test("404: not found, comment_id is valid but does not exist", () => {
+        return request(app)
+            .delete("/api/comments/10000")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("comment id 10000 not found");
+            });
+    });
 
 })
 
@@ -333,4 +358,6 @@ describe("GET /api/users", () => {
                 })
             })
     })
+
+})
 })

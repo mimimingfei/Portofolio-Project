@@ -1,6 +1,7 @@
 const express = require("express");
+
+const {getCommentsForArticle,postCommentForArticle,deleteComment} = require('./controllers/comment.controller')
 const {getAllTopics,getAllEndpoints,getArticleById,getAllArticles, updateArticle} = require("./controllers/article.controller")
-const {getCommentsForArticle,postCommentForArticle} = require('./controllers/comment.controller')
 const {handlePsqlErrors, handleCustomErrors, handleServerErrors, handle404} = require("./errors")
 const{getAllUsers} = require('./controllers/user.controller')
 const app = express();
@@ -17,8 +18,8 @@ app.get('/api/users',getAllUsers)
 
 
 app.post('/api/articles/:article_id/comments', postCommentForArticle)
+app.delete('/api/comments/:comment_id',deleteComment)
 app.patch('/api/articles/:article_id',updateArticle)
-
 
 app.use(handle404)
 app.use(handlePsqlErrors)
