@@ -106,17 +106,17 @@ describe("GET /api/articles", () => {
                 articles.forEach((article) => {
                     expect(article).toMatchObject({
                         author: expect.any(String),
-                        title:expect.any(String),
+                        title: expect.any(String),
                         article_id: expect.any(Number),
-                        topic:expect.any(String),
+                        topic: expect.any(String),
                         created_at: expect.any(String),
-                        votes:expect.any(Number),
-                        comment_count:expect.any(Number)
+                        votes: expect.any(Number),
+                        comment_count: expect.any(Number)
                     });
                     expect(articles).toBeSortedBy("created_at", { descending: true });
+                })
             })
     })
-})
 })
 
 describe('/api/articles/:article_id/comments', () => {
@@ -150,7 +150,7 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(comments).toEqual([]);
             });
     });
-  
+
     test("404: article_id is valid but does not exist", () => {
         return request(app)
             .get("/api/articles/1000/comments")
@@ -186,7 +186,7 @@ describe("POST /api/articles/:article_id/comments", () => {
             })
     })
     test("400: invalid input comment data", () => {
-        const newComment= { comment: "test" };
+        const newComment = { comment: "test" };
         return request(app)
             .post("/api/articles/1/comments")
             .send(newComment)
@@ -198,29 +198,93 @@ describe("POST /api/articles/:article_id/comments", () => {
     test("404: valid input data but article does not exist", () => {
         const newComment = { username: "butter_bridge", comment: "test" };
         return request(app)
-          .post("/api/articles/983247823/comments")
-          .send(newComment)
-          .expect(404)
-          .then(({ body }) => {
-            expect(body.msg).toBe("article of id 983247823 is not found");
-          });
-      });
-     
-    
+            .post("/api/articles/983247823/comments")
+            .send(newComment)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("article of id 983247823 is not found");
+            });
+    });
+
+
 
 })
 
-// describe.only("PATCH /api/articles/:article_id", () => {
-//     test("200: update votes property", () => {
-//         const testObj = { inc_votes: 1 }
-//         return request(app)
-//             .patch("/api/articles/1")
-//             .send(testObj)
-//             .expect(200)
-//             .then(({ body }) => {
-//                 const {article } = body
-//                 console.log(article)
-//                 expect(article.votes).toBe(101)
-//             })
-//     })
-// })
+describe("PATCH /api/articles/:article_id", () => {
+    test("200: decrease votes and return updated article", () => {
+        const testVotes = { inc_votes: -1 }
+        const expectedArticle = {
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: "2020-07-09T21:11:00.000Z",
+            votes: 99,
+            article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        };
+        return request(app)
+            .patch("/api/articles/1")
+            .send(testVotes)
+            .expect(200)
+            .then(({ body }) => {
+                const { updatedArticle } = body;
+                expect(updatedArticle).toEqual(expectedArticle);
+            })
+    })
+    test("200: increase votes and return updated article", () => {
+        const testVotes = { inc_votes: 5 }
+        const expectedArticle =   {
+            article_id: 2,
+            title: "Sony Vaio; or, The Laptop",
+            topic: "mitch",
+            author: "icellusedkars",
+            body: "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.",
+            created_at: "2020-10-16T06:03:00.000Z",
+            votes: 5,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          }
+          return request(app)
+          .patch("/api/articles/2")
+          .send(testVotes)
+          .expect(200)
+          .then(({ body }) => {
+              const { updatedArticle } = body;
+              expect(updatedArticle).toEqual(expectedArticle);
+          })
+    })
+    test("404: not found, article_id is valid but does not exist", () => {
+        const testVotes = { inc_votes: 5 }
+        return request(app)
+          .patch("/api/articles/10000")
+          .send(testVotes)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("article of id 10000 is not found");
+          });
+      });
+    
+      test("400: bad request, article_id is invalid", () => {
+        const testVotes = { inc_votes: 5 }
+        return request(app)
+          .patch("/api/articles/aefegtaa")
+          .send(testVotes)
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("bad request");
+          });
+      });
+
+      test("400: bad request, invalid votes", () => {
+        const testVotes = { inc_votes: "test" }
+        return request(app)
+          .patch("/api/articles/3")
+          .send(testVotes)
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("bad request");
+          });
+      });
+})
