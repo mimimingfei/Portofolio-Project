@@ -1,4 +1,4 @@
-const { selectCommentsForArticle,addCommentsForArticle } = require('../models/comment.model');
+const { selectCommentsForArticle,addCommentsForArticle, checkCommentIdExists,deleteCommentById} = require('../models/comment.model');
 const { selectArticleById } = require('../models/article.model')
 exports.getCommentsForArticle = (req, res, next) => {
     const { article_id } = req.params;
@@ -24,4 +24,13 @@ exports.postCommentForArticle = (req, res, next)=>{
   };
 
 
-
+exports.deleteComment = (req, res, next) => {
+    const { comment_id } = req.params;
+    checkCommentIdExists(comment_id).then(() => {
+        return deleteCommentById(comment_id);
+      })
+      .then(() => {
+        return res.status(204).send();
+      })
+      .catch(next);
+  };
