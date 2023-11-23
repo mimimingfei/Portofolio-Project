@@ -1,5 +1,5 @@
 const articles = require('../db/data/test-data/articles.js');
-const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId } = require('../models/article.model.js')
+const { selectTopics, selectArticleById, selectAllArticles, patchArticle } = require('../models/article.model.js')
 
 
 exports.getAllTopics = (req, res, next) => {
@@ -31,13 +31,18 @@ exports.getAllArticles = (req, res, next) => {
         .catch(next);
 };
 
-exports.updateArticle = ()=>{}
 
-// /api/articles/:article_id.
-// update an article by article_id.
-// Request body accepts:
+exports.updateArticle = (req, res, next) =>{
+    const { article_id } = req.params;
+    const newVote = req.body;
+    selectArticleById(article_id).then((article)=>{
+        return patchArticle(article.article_id, newVote)
+    })
+   .then((updatedArticle)=>{
+        return res.status(200).send({updatedArticle})
+    })
+    .catch(next);
+}
 
-// an object in the form { inc_votes: newVote }.
-// newVote will indicate how much the votes property in the database should be updated by, e.g.
-// { inc_votes : 1 } would increment the current article's vote property by 1
-// { inc_votes : -100 } would decrement the current article's vote property by 100
+
+

@@ -39,3 +39,14 @@ return db.query(`SELECT comment_id, article_id FROM comments WHERE article_id = 
         return rows
     });
 };
+
+exports.patchArticle = (article_id, newVote)=>{
+    const {inc_votes} = newVote
+    return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;`,[inc_votes,article_id])
+    .then(({rows})=>{
+        if(rows.length===0){
+            return Promise.reject({status:404, msg:`update article fail`})
+        }
+        return rows[0]
+    })
+}
