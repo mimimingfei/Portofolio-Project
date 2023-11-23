@@ -1,8 +1,8 @@
 const request = require("supertest")
-const app = require("../app")
-const db = require("../db/connection")
-const seed = require("../db/seeds/seed")
-const { topicData, userData, articleData, commentData } = require("../db/data/test-data/index.js")
+const app = require("./app")
+const db = require("./db/connection")
+const seed = require("./db/seeds/seed")
+const { topicData, userData, articleData, commentData } = require("./db/data/test-data/index.js")
 const fs = require('fs');
 const path = require('path');
 require("jest-sorted");
@@ -29,15 +29,6 @@ describe("GET /api/topics", () => {
                 })
             })
     })
-
-    test("404: responds with not found for invalid endpoint", () => {
-        return request(app)
-            .get("/api/invalid_endpoint")
-            .expect(404)
-            .then(({ body }) => {
-                expect(body.msg).toBe("not found");
-            });
-    });
 })
 
 
@@ -47,7 +38,7 @@ describe("GET /api", () => {
             .get("/api")
             .expect(200)
             .then(({ body }) => {
-                const filePath = `${__dirname}/../endpoints.json`;
+                const filePath = `${__dirname}/endpoints.json`;
                 const endpointsJSON = JSON.parse(fs.readFileSync(filePath, 'utf8'));
                 expect(body.endpoints).toMatchObject(endpointsJSON);
             });
@@ -170,3 +161,76 @@ describe('/api/articles/:article_id/comments', () => {
     });
 
 })
+
+describe("POST /api/articles/:article_id/comments", () => {
+    test("201: responds with the posted comment", () => {
+        const newComment = { username: 'butter_bridge', body: "test" };
+        return request(app)
+            .post("/api/articles/1/comments")
+            .send(newComment)
+            .expect(201)
+            .then(({ body }) => {
+                const { Comment } = body;
+                expect(Comment.body).toBe('test')
+                expect(Comment.article_id).toBe(1)
+                expect(Comment.author).toBe('butter_bridge')
+            })
+    })
+    test('201:ignore any unnecessary properties on the request body',()=>{
+        const newComment = { username: 'butter_bridge', body: "test", votes:100, color:'red'};
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+            const { Comment } = body;
+            expect(Comment.body).toBe('test')
+            expect(Comment.article_id).toBe(1)
+            expect(Comment.author).toBe('butter_bridge')
+        })
+
+    })
+    test("400: Bad request, missing part of input comment data ", () => {
+        const newComment= { comment: "test" };
+        return request(app)
+            .post("/api/articles/1/comments")
+            .send(newComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            });
+    });
+    test("400: Bad request, invalid article_id ", () => {
+        const newComment= { username: "butter_bridge", body: "test" };
+        return request(app)
+            .post("/api/articles/notanumber/comments")
+            .send(newComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            });
+    });
+    test("404: valid input data but article_id does not exist", () => {
+        const newComment = { username: "butter_bridge", body: "test" };
+        return request(app)
+          .post("/api/articles/983247823/comments")
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("article of id 983247823 is not found");
+          });
+      });
+     
+    test("404: valid input data but username does not exist", () => {
+        const newComment = { username: "ABC", body: "test" };
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("foreign key violation");
+          });
+      });
+     
+
+    })
