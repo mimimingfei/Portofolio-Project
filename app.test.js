@@ -209,3 +209,18 @@ describe("POST /api/articles/:article_id/comments", () => {
     
 
 })
+
+// describe.only("PATCH /api/articles/:article_id", () => {
+//     test("200: update votes property", () => {
+//         const testObj = { inc_votes: 1 }
+//         return request(app)
+//             .patch("/api/articles/1")
+//             .send(testObj)
+//             .expect(200)
+//             .then(({ body }) => {
+//                 const {article } = body
+//                 console.log(article)
+//                 expect(article.votes).toBe(101)
+//             })
+//     })
+// })

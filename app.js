@@ -1,5 +1,5 @@
 const express = require("express");
-const {getAllTopics,getAllEndpoints,getArticleById,getAllArticles} = require("./controllers/article.controller")
+const {getAllTopics,getAllEndpoints,getArticleById,getAllArticles, updateArticle} = require("./controllers/article.controller")
 const {getCommentsForArticle,postCommentForArticle} = require('./controllers/comment.controller')
 const {handlePsqErrors, handleCustomErrors, handleServerErrors, handle404} = require("./errors")
 
@@ -13,7 +13,7 @@ app.get('/api/articles/:article_id/comments',getCommentsForArticle)
 app.get('/api/articles',getAllArticles)
 
 app.post('/api/articles/:article_id/comments', postCommentForArticle)
-
+app.patch('/api/articles/:article_id',updateArticle)
 
 
 app.all("*", handle404)

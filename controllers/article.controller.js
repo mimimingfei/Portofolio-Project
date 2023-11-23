@@ -1,5 +1,5 @@
 const articles = require('../db/data/test-data/articles.js');
-const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId } = require('../models/article.model.js')
+const { selectTopics, selectArticleById, selectAllArticles, patchArticle } = require('../models/article.model.js')
 
 
 exports.getAllTopics = (req, res, next) => {
@@ -30,3 +30,16 @@ exports.getAllArticles = (req, res, next) => {
         })
         .catch(next);
 };
+
+exports.updateArticle = (req, res, next) =>{
+    const { article_id } = req.params;
+    const newVote = req.body;
+    selectArticleById(article_id).then((article)=>{
+        return patchArticle(article.article_id, newVote)
+    })
+   .then((updatedArticle)=>{
+        return res.status(200).send({updatedArticle})
+    })
+    .catch(next);
+}
+
