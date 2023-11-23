@@ -31,6 +31,7 @@ exports.getAllArticles = (req, res, next) => {
         .catch(next);
 };
 
+
 exports.updateArticle = (req, res, next) =>{
     const { article_id } = req.params;
     const newVote = req.body;
@@ -42,4 +43,6 @@ exports.updateArticle = (req, res, next) =>{
     })
     .catch(next);
 }
+
+
 
