@@ -316,4 +316,21 @@ describe("PATCH /api/articles/:article_id", () => {
 
      
 
+describe("GET /api/users", () => {
+    test("200: responds with an array of user object", () => {
+        return request(app)
+            .get("/api/users")
+            .expect(200)
+            .then(({ body }) => {
+                const { users } = body;
+                expect(users).toHaveLength(4);
+                users.forEach((user) => {
+                    expect(user).toMatchObject({
+                        username: expect.any(String),
+                        name: expect.any(String),
+                        avatar_url: expect.any(String),
+                    });
+                })
+            })
     })
+})
