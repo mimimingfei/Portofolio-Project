@@ -176,7 +176,21 @@ describe("POST /api/articles/:article_id/comments", () => {
                 expect(Comment.author).toBe('butter_bridge')
             })
     })
-    test("400: invalid input comment data", () => {
+    test('201:ignore any unnecessary properties on the request body',()=>{
+        const newComment = { username: 'butter_bridge', body: "test", votes:100, color:'red'};
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+            const { Comment } = body;
+            expect(Comment.body).toBe('test')
+            expect(Comment.article_id).toBe(1)
+            expect(Comment.author).toBe('butter_bridge')
+        })
+
+    })
+    test("400: Bad request, missing part of input comment data ", () => {
         const newComment= { comment: "test" };
         return request(app)
             .post("/api/articles/1/comments")
@@ -186,7 +200,17 @@ describe("POST /api/articles/:article_id/comments", () => {
                 expect(body.msg).toBe("bad request")
             });
     });
-    test("404: valid input data but article does not exist", () => {
+    test("400: Bad request, invalid article_id ", () => {
+        const newComment= { username: "butter_bridge", body: "test" };
+        return request(app)
+            .post("/api/articles/notanumber/comments")
+            .send(newComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request")
+            });
+    });
+    test("404: valid input data but article_id does not exist", () => {
         const newComment = { username: "butter_bridge", body: "test" };
         return request(app)
           .post("/api/articles/983247823/comments")
@@ -209,4 +233,4 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
      
 
-})
+    })
