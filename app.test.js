@@ -189,7 +189,7 @@ describe("POST /api/articles/:article_id/comments", () => {
                 expect(Comment.article_id).toBe(1)
                 expect(Comment.author).toBe('butter_bridge')
             })
-        })
+
     test("400: Bad request, missing part of input comment data ", () => {
         const newComment = { comment: "test" };
         return request(app)
@@ -285,7 +285,7 @@ describe("PATCH /api/articles/:article_id", () => {
     })
     test("200: increase votes and return updated article", () => {
         const testVotes = { inc_votes: 5 }
-        const expectedArticle =   {
+        const expectedArticle = {
             article_id: 2,
             title: "Sony Vaio; or, The Laptop",
             topic: "mitch",
@@ -294,49 +294,49 @@ describe("PATCH /api/articles/:article_id", () => {
             created_at: "2020-10-16T06:03:00.000Z",
             votes: 5,
             article_img_url:
-              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-          }
-          return request(app)
-          .patch("/api/articles/2")
-          .send(testVotes)
-          .expect(200)
-          .then(({ body }) => {
-              const { updatedArticle } = body;
-              expect(updatedArticle).toEqual(expectedArticle);
-          })
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        }
+        return request(app)
+            .patch("/api/articles/2")
+            .send(testVotes)
+            .expect(200)
+            .then(({ body }) => {
+                const { updatedArticle } = body;
+                expect(updatedArticle).toEqual(expectedArticle);
+            })
     })
     test("404: not found, article_id is valid but does not exist", () => {
         const testVotes = { inc_votes: 5 }
         return request(app)
-          .patch("/api/articles/10000")
-          .send(testVotes)
-          .expect(404)
-          .then(({ body }) => {
-            expect(body.msg).toBe("article of id 10000 is not found");
-          });
-      });
-    
-      test("400: bad request, article_id is invalid", () => {
+            .patch("/api/articles/10000")
+            .send(testVotes)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("article of id 10000 is not found");
+            });
+    });
+
+    test("400: bad request, article_id is invalid", () => {
         const testVotes = { inc_votes: 5 }
         return request(app)
-          .patch("/api/articles/aefegtaa")
-          .send(testVotes)
-          .expect(400)
-          .then(({ body }) => {
-            expect(body.msg).toBe("bad request");
-          });
-      });
+            .patch("/api/articles/aefegtaa")
+            .send(testVotes)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request");
+            });
+    });
 
-      test("400: bad request, invalid votes", () => {
+    test("400: bad request, invalid votes", () => {
         const testVotes = { inc_votes: "test" }
         return request(app)
-          .patch("/api/articles/3")
-          .send(testVotes)
-          .expect(400)
-          .then(({ body }) => {
-            expect(body.msg).toBe("bad request");
-          });
-      });
+            .patch("/api/articles/3")
+            .send(testVotes)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("bad request");
+            });
+    });
 })
 
 
@@ -360,4 +360,45 @@ describe("GET /api/users", () => {
 })
 
 
+
+describe("GET /api/articles?topic", () => {
+    test("200: return articles of the topic", () => {
+        return request(app)
+            .get("/api/articles?topic=cats")
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                expect(articles).toHaveLength(1);
+                articles.forEach((article) => {
+                    expect(article).toMatchObject({
+                        title: expect.any(String),
+                        topic: "cats",
+                        author: expect.any(String),
+                        article_id: expect.any(Number),
+                        topic: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        comment_count: expect.any(Number)
+                    })
+                })
+            })
+    })
+    test("200: return [] when topic exists but has no articles", () => {
+        return request(app)
+            .get("/api/articles?topic=paper")
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                expect(articles).toEqual([]);
+            })
+    })
+    test("404: not found, topic does not exist", () => {
+        return request(app)
+            .get("/api/articles?topic=aeyu12hef")
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("topic aeyu12hef not found");
+            })
+    })
+})
 
