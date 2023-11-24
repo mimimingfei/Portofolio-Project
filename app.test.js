@@ -189,7 +189,6 @@ describe("POST /api/articles/:article_id/comments", () => {
                 expect(Comment.article_id).toBe(1)
                 expect(Comment.author).toBe('butter_bridge')
             })
-    })
 
     test("400: Bad request, missing part of input comment data ", () => {
         const newComment = { comment: "test" };
@@ -358,8 +357,8 @@ describe("GET /api/users", () => {
                 })
             })
     })
-
 })
+
 
 
 describe("GET /api/articles?topic", () => {
@@ -402,3 +401,4 @@ describe("GET /api/articles?topic", () => {
             })
     })
 })
+
