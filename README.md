@@ -23,9 +23,9 @@ PGDATABASE= nc_news
 5. To setup database - `psql -f ./db/setup.sql`
 6. To seed database - `node ./db/seeds/run-seed.js`
 
-#### To check if database exists, in terminal, run `psql` then type `\c DADABASENAME`
+#### To check if database exists, in terminal, run `psql` then type `\c DATABASENAME`
 
-It should show 'You are now connected to database "DADABASENAME" as user "USERNAME"' when connection is sucessfully. You can type `\q`to exit.
+It should show 'You are now connected to database "DATABASENAME" as user "USERNAME"' when connection is sucessfully. You can type `\q`to exit.
 
 # Run tests
 #### run `npm test app.test.js` in terminal
