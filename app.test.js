@@ -402,3 +402,27 @@ describe("GET /api/articles?topic", () => {
     })
 })
 
+describe("GET /api/articles/:article_id(comment_count)", () => {
+    test("200: returns article with comment_count property", () => {
+      const expected = {
+        article_id: 3,
+        title: "Eight pug gifs that remind me of mitch",
+        topic: "mitch",
+        author: "icellusedkars",
+        body: "some gifs",
+        votes: 0,
+        created_at: "2020-11-03T09:12:00.000Z",
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        comment_count: 2,
+      };
+      return request(app)
+        .get("/api/articles/3")
+        .expect(200)
+        .then(({ body }) => {
+          const { article } = body;
+          expect(article).toEqual(expected);
+        });
+    });
+  });
+
