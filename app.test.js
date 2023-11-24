@@ -189,8 +189,7 @@ describe("POST /api/articles/:article_id/comments", () => {
                 expect(Comment.article_id).toBe(1)
                 expect(Comment.author).toBe('butter_bridge')
             })
-    })
-
+        })
     test("400: Bad request, missing part of input comment data ", () => {
         const newComment = { comment: "test" };
         return request(app)
@@ -358,8 +357,8 @@ describe("GET /api/users", () => {
                 })
             })
     })
-
 })
+
 
 
 describe("GET /api/articles?topic", () => {
@@ -402,6 +401,7 @@ describe("GET /api/articles?topic", () => {
             })
     })
 })
+
 describe("GET /api/articles/:article_id(comment_count)", () => {
     test("200: returns article with comment_count property", () => {
       const expected = {
@@ -425,3 +425,4 @@ describe("GET /api/articles/:article_id(comment_count)", () => {
         });
     });
   });
+
