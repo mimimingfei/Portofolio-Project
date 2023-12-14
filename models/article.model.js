@@ -24,8 +24,8 @@ exports.selectArticleById = (id)=>{
     })
 }
 
-exports.selectAllArticles = (topicSlug) => {
-    let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes,articles.article_img_url,
+exports.selectAllArticles = (topicSlug, sort_by = 'created_at', order = 'desc') => {
+    let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url,
     CAST(COUNT(comments.article_id) AS INT) AS comment_count
     FROM articles
     LEFT JOIN comments ON comments.article_id = articles.article_id`;
@@ -34,10 +34,25 @@ exports.selectAllArticles = (topicSlug) => {
         queryStr += ` WHERE articles.topic = $1`;
         values.push(topicSlug);
     }
-    queryStr += ` GROUP BY articles.article_id
-    ORDER BY created_at DESC`;
+
+    queryStr += ` GROUP BY articles.article_id`;
+    switch (sort_by) {
+        case 'date':
+            queryStr += ` ORDER BY articles.created_at`;
+            break;
+        case 'comment_count':
+            queryStr += ` ORDER BY comment_count`;
+            break;
+        case 'votes':
+            queryStr += ` ORDER BY articles.votes`;
+            break;
+        default:
+            queryStr += ` ORDER BY articles.created_at`;
+    }
+    queryStr += ` ${order.toUpperCase() === 'ASC' ? 'ASC' : 'DESC'}`;
     return db.query(queryStr, values).then(({ rows }) => rows);
 };
+
 
 exports.selectCommentsByArticleId = (articleId) => {
 return db.query(`SELECT comment_id, article_id FROM comments WHERE article_id = $1;`,[articleId])
