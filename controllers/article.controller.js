@@ -24,17 +24,16 @@ exports.getArticleById = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    const { topic } = req.query;
+    const { topic, sort_by = 'created_at', order = 'desc' } = req.query;
     checkTopicExist(topic)
         .then(topicData => {
-            return selectAllArticles(topicData ? topicData.slug : undefined);
+            return selectAllArticles(topicData ? topicData.slug : undefined, sort_by, order);
         })
         .then(articles => {
             res.status(200).send({ articles });
         })
         .catch(next);
 };
-
 
 
 exports.updateArticle = (req, res, next) => {
